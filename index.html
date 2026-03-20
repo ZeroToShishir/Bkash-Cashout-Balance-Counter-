@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cashout Counter</title>
+
+<style>
+:root {
+  --primary: #D12053;
+  --bg: #ffffff;
+  --text: #111;
+}
+
+body.dark {
+  --bg: #121212;
+  --text: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: 0.3s;
+}
+
+.container {
+  width: 90%;
+  max-width: 400px;
+  background: var(--bg);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+h1 {
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+input {
+  width: 90%;
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.rate-btn {
+  background: var(--primary);
+  color: white;
+  flex: 1;
+}
+
+.calculate {
+  width: 100%;
+  background: black;
+  color: white;
+  margin-top: 10px;
+}
+
+.result {
+  margin-top: 20px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.toggle {
+  margin-top: 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.footer {
+  margin-top: 25px;
+  font-size: 14px;
+}
+
+.footer a {
+  color: #1877F2;
+  text-decoration: none;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Cashout Counter</h1>
+
+  <input type="number" id="balance" placeholder="Enter Balance (৳)">
+
+  <div class="buttons">
+    <button class="rate-btn" onclick="setRate(14.90)">14.90</button>
+    <button class="rate-btn" onclick="setRate(18.50)">18.50</button>
+  </div>
+
+  <button class="calculate" onclick="calculate()">Calculate</button>
+
+  <div class="result" id="result">৳ 0.00</div>
+
+  <div class="toggle" onclick="toggleMode()">🌙 Toggle Day/Night</div>
+
+  <div class="footer">
+    Made by Shishir <br>
+    <a href="https://www.facebook.com/imshishr" target="_blank">Facebook</a>
+  </div>
+</div>
+
+<script>
+let selectedRate = 14.90;
+
+function setRate(rate) {
+  selectedRate = rate;
+}
+
+function calculate() {
+  let balance = parseFloat(document.getElementById("balance").value);
+
+  if (!balance || balance <= 0) {
+    alert("Enter valid amount");
+    return;
+  }
+
+  let cashout = balance / (1 + selectedRate / 1000);
+
+  document.getElementById("result").innerText =
+    "৳ " + cashout.toFixed(2);
+}
+
+function toggleMode() {
+  document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>
