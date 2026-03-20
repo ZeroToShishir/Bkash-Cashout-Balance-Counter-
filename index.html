@@ -7,10 +7,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Cashout Counter">
-    <meta name="description" content="Calculate bKash cash out amounts with charges - Professional calculator for Bangladesh">
-    <title>Cashout Counter</title>
+    <meta name="description" content="Calculate bKash / Nagad cash out amounts & charges - Dual mode calculator for Bangladesh">
+    <title>Cashout Counter | Balance & Charge</title>
     
-    <!-- PWA Manifest -->
+    <!-- PWA Manifest stub (keeping original style) -->
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ2FzaG91dCBDb3VudGVyIiwic2hvcnRfbmFtZSI6IkNhc2hvdXQiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI0QxMjA1MyIsInRoZW1lX2NvbG9yIjoiI0QxMjA1MyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5alpYSjBMWFpsY25OcGIyNGlJSGRwWkhSb1BTSXlOVEFpSUdobGFXZG9kRDBpTWpVd0lpQjJhV1YzUW05NFBTSXdJajQ4YzNabklIZHBaSFJvUFNJeU5UQWlJR2hsYVdkb2REMGliVzlpWjJVPklqNDhkSE53SUdadmJuUTlJbU52YlhCc1pYTWlJR2x1Wm05eWJXRjBhR2x1WjBOdmJuUmxiblJwZEhrOUlpSWdlRzFzYm5NNmVHMXNibk05SW1oMGRIQTZMeTkzZDNjdWQzTXViM0puTHpJd01EQXZaR1ZzWVhrdlJHRnVaR1Z5Y3k5bWFXeGxMMkZ3Y0d4cFkyRmliR3h6TDJsdVpHVjRMWFZ6WlhJdFlYQndZV05sYkhNdGJXRjBhWFJoY21sdVl5MXdZWEJ6YVdOaGJHRnlaQzF3Y21GamRHbGhiUzF6YjJaMGQyRnlaWE11WTI5dElqNEtQQzl6ZG1jKyIsInNpemUiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
     
     <style>
@@ -107,15 +107,18 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .app-title {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 10px;
+            flex: 1;
         }
 
         .app-icon {
@@ -129,6 +132,36 @@
             color: var(--primary);
             font-weight: bold;
             font-size: 20px;
+        }
+
+        /* Mode Switch (Balance / Charge) */
+        .mode-switch {
+            display: flex;
+            background: rgba(255,255,255,0.2);
+            border-radius: 40px;
+            padding: 4px;
+            backdrop-filter: blur(4px);
+            gap: 4px;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+            white-space: nowrap;
+        }
+
+        .mode-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .theme-toggle {
@@ -145,15 +178,15 @@
             font-size: 20px;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            flex-shrink: 0;
         }
 
         .theme-toggle:active {
             transform: scale(0.95);
-            background: rgba(255,255,255,0.3);
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
             font-weight: 500;
         }
@@ -174,7 +207,7 @@
             width: 0;
         }
 
-        /* Input Section */
+        /* Input Card */
         .input-card {
             background: var(--surface);
             border-radius: var(--radius);
@@ -235,31 +268,25 @@
             box-shadow: 0 0 0 4px rgba(209, 32, 83, 0.1);
         }
 
-        .amount-input::placeholder {
-            color: var(--gray-400);
-            font-weight: 500;
-        }
-
-        /* Rate Selection */
+        /* Rate Selection (3 buttons + custom) */
         .rate-section {
             margin-top: 8px;
         }
 
         .rate-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 12px;
         }
 
-        /* Default state - not selected */
         button.rate-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 4px;
-            padding: 16px;
+            padding: 14px 8px;
             background: var(--input-bg) !important;
             border: 2px dashed var(--border) !important;
             border-radius: var(--radius-sm);
@@ -267,11 +294,8 @@
             transition: all 0.3s ease;
             text-align: center;
             -webkit-appearance: none;
-            appearance: none;
-            color: inherit;
         }
 
-        /* Selected state - MUST override default */
         button.rate-btn.active {
             background: var(--primary) !important;
             border: 2px solid var(--primary) !important;
@@ -280,29 +304,23 @@
             box-shadow: 0 4px 15px rgba(209, 32, 83, 0.4);
         }
 
-        button.rate-btn.active .rate-amount {
+        button.rate-btn.active .rate-amount,
+        button.rate-btn.active .rate-label {
             color: white !important;
         }
 
-        button.rate-btn.active .rate-label {
-            color: rgba(255,255,255,0.9) !important;
-        }
-
         .rate-amount {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--text-primary);
-            transition: color 0.3s ease;
         }
 
         .rate-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
             font-weight: 600;
-            transition: color 0.3s ease;
         }
 
-        /* Custom toggle - same styling logic */
         .custom-rate-toggle {
             display: flex;
             align-items: center;
@@ -317,8 +335,6 @@
             font-weight: 600;
             color: var(--text-secondary);
             transition: all 0.3s ease;
-            -webkit-appearance: none;
-            appearance: none;
         }
 
         .custom-rate-toggle.active {
@@ -347,26 +363,37 @@
         .custom-input-wrapper {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .custom-input {
             flex: 1;
             padding: 14px 16px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            border: 3px solid var(--primary);
+            border: 2px solid var(--primary);
             border-radius: var(--radius-sm);
             background: var(--input-bg);
             color: var(--text-primary);
             outline: none;
         }
 
-        .custom-input:focus {
-            box-shadow: 0 0 0 4px rgba(209, 32, 83, 0.1);
+        .apply-custom-btn {
+            background: var(--primary);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
         }
 
-        /* Calculate Button */
+        .apply-custom-btn:active {
+            transform: scale(0.96);
+        }
+
         .calculate-btn {
             width: 100%;
             padding: 20px;
@@ -384,20 +411,13 @@
             justify-content: center;
             gap: 10px;
             margin-top: 8px;
-            -webkit-appearance: none;
-            appearance: none;
         }
 
         .calculate-btn:active {
             transform: scale(0.98);
-            box-shadow: 0 2px 8px rgba(209, 32, 83, 0.3);
         }
 
-        .calculate-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Result Section */
+        /* Result Card */
         .result-card {
             background: var(--surface);
             border-radius: var(--radius);
@@ -441,12 +461,6 @@
             line-height: 1;
         }
 
-        .result-currency {
-            font-size: 20px;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
         .breakdown {
             display: grid;
             gap: 12px;
@@ -462,7 +476,6 @@
 
         .breakdown-row:last-child {
             border-bottom: none;
-            padding-bottom: 0;
         }
 
         .breakdown-label {
@@ -493,11 +506,6 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
-        }
-
-        .rate-badge.custom {
-            background: rgba(40, 167, 69, 0.1);
-            color: var(--success);
         }
 
         /* Info Cards */
@@ -535,13 +543,6 @@
             color: var(--text-primary);
         }
 
-        /* Scrollable spacer to push footer down */
-        .scroll-spacer {
-            height: 40px;
-            flex-shrink: 0;
-        }
-
-        /* Footer - Mini at bottom */
         .footer {
             padding: 16px 24px 24px;
             text-align: center;
@@ -554,7 +555,6 @@
         .developer {
             font-size: 11px;
             color: var(--text-secondary);
-            margin-bottom: 4px;
             opacity: 0.8;
         }
 
@@ -569,21 +569,8 @@
             padding: 4px 8px;
             border-radius: 12px;
             background: rgba(24, 119, 242, 0.1);
-            transition: all 0.3s ease;
         }
 
-        .facebook-link:active {
-            transform: scale(0.95);
-            background: rgba(24, 119, 242, 0.2);
-        }
-
-        .facebook-icon {
-            width: 12px;
-            height: 12px;
-            fill: currentColor;
-        }
-
-        /* Toast Notification */
         .toast {
             position: fixed;
             bottom: 100px;
@@ -591,14 +578,14 @@
             transform: translateX(-50%) translateY(100px);
             background: var(--gray-800);
             color: white;
-            padding: 14px 24px;
+            padding: 12px 24px;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0;
             transition: all 0.3s ease;
             z-index: 1000;
-            box-shadow: var(--shadow-lg);
+            pointer-events: none;
         }
 
         .toast.show {
@@ -606,432 +593,380 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Responsive */
-        @media (max-width: 380px) {
-            .app-title {
-                font-size: 24px;
-            }
-            .result-amount {
-                font-size: 36px;
-            }
-            .rate-amount {
-                font-size: 18px;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Pulse animation for result */
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+        @media (max-width: 420px) {
+            .rate-amount { font-size: 16px; }
+            .mode-btn { padding: 6px 12px; font-size: 12px; }
+            .app-title { font-size: 20px; }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
+        <!-- Header with Mode Switch -->
         <header class="header">
             <div class="header-top">
                 <div class="app-title">
                     <div class="app-icon">৳</div>
                     Cashout Counter
                 </div>
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <div class="mode-switch" id="modeSwitch">
+                    <button class="mode-btn active" data-mode="balance">Balance</button>
+                    <button class="mode-btn" data-mode="charge">Charge</button>
+                </div>
+                <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle theme">
                     <span id="theme-icon">🌙</span>
                 </button>
             </div>
-            <div class="subtitle">Calculate bKash Cash Out with Charges</div>
+            <div class="subtitle" id="modeSubtitle">Calculate net cashout after bKash/Nagad charge</div>
         </header>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Input Card -->
             <div class="input-card">
                 <div class="input-group">
-                    <label class="input-label">
+                    <label class="input-label" id="amountFieldLabel">
                         <span>💰</span> Your Balance
                     </label>
                     <div class="input-wrapper">
                         <span class="currency-symbol">৳</span>
-                        <input 
-                            type="number" 
-                            class="amount-input" 
-                            id="balance" 
-                            placeholder="Enter amount"
-                            inputmode="numeric"
-                            pattern="[0-9]*"
-                        >
+                        <input type="number" class="amount-input" id="amountInput" placeholder="Enter amount" inputmode="numeric">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label">
-                        <span>⚡</span> Select Charge Rate
-                    </label>
+                    <label class="input-label"><span>⚡</span> Select Charge Rate (per 1000 TK)</label>
                     <div class="rate-section">
                         <div class="rate-grid">
-                            <button type="button" class="rate-btn" id="rate-14.90" onclick="selectRate(14.90, 'priyo')">
-                                <div class="rate-amount">৳14.90</div>
-                                <div class="rate-label">Priyo Agent / ATM</div>
+                            <button type="button" class="rate-btn" data-rate="14.90" data-name="bKash">
+                                <span class="rate-amount">14.90 ৳</span>
+                                <span class="rate-label">bKash</span>
                             </button>
-                            <button type="button" class="rate-btn" id="rate-18.50" onclick="selectRate(18.50, 'regular')">
-                                <div class="rate-amount">৳18.50</div>
-                                <div class="rate-label">Regular Agent</div>
+                            <button type="button" class="rate-btn" data-rate="15" data-name="Nagad">
+                                <span class="rate-amount">15.00 ৳</span>
+                                <span class="rate-label">Nagad</span>
+                            </button>
+                            <button type="button" class="rate-btn" data-rate="18.50" data-name="Agent">
+                                <span class="rate-amount">18.50 ৳</span>
+                                <span class="rate-label">Agent</span>
                             </button>
                         </div>
                         
-                        <button type="button" class="custom-rate-toggle" id="custom-toggle" onclick="toggleCustomRate()">
-                            <span>⚙️</span>
-                            <span>Use Custom Rate</span>
-                        </button>
-                        
-                        <div class="custom-rate-input" id="custom-rate-container">
+                        <div class="custom-rate-toggle" id="customToggle">
+                            <span>✏️</span> Custom Rate
+                        </div>
+                        <div class="custom-rate-input" id="customInputPanel">
                             <div class="custom-input-wrapper">
-                                <span style="font-size: 20px; font-weight: 700; color: var(--primary);">৳</span>
-                                <input 
-                                    type="number" 
-                                    class="custom-input" 
-                                    id="custom-rate" 
-                                    placeholder="Enter custom rate"
-                                    step="0.01"
-                                    oninput="handleCustomRateInput(this.value)"
-                                >
-                                <span style="font-size: 14px; color: var(--text-secondary); font-weight: 600;">/1000</span>
+                                <input type="number" id="customRateValue" class="custom-input" placeholder="Rate per 1000" step="0.01">
+                                <button class="apply-custom-btn" id="applyCustomBtn">Apply</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <button type="button" class="calculate-btn" onclick="calculate()">
-                    <span>🧮</span>
-                    <span>Calculate Cash Out</span>
+                <button class="calculate-btn" id="calculateBtn">
+                    <span>📱</span> Calculate
                 </button>
             </div>
 
-            <!-- Result Card -->
-            <div class="result-card" id="result">
+            <!-- Result Section -->
+            <div class="result-card" id="resultCard">
                 <div class="result-header">
-                    <div class="result-title">You Can Cash Out</div>
-                    <div class="result-amount" id="result-amount">৳0.00</div>
-                    <div style="margin-top: 8px;">
-                        <span class="rate-badge" id="rate-badge">৳14.90 rate</span>
-                    </div>
+                    <div class="result-title" id="resultTitle">You'll Receive</div>
+                    <div class="result-amount" id="resultAmount">0 ৳</div>
                 </div>
-                
-                <div class="breakdown">
-                    <div class="breakdown-row">
-                        <span class="breakdown-label">
-                            <span>💵</span> Your Balance
-                        </span>
-                        <span class="breakdown-value" id="breakdown-balance">৳0</span>
-                    </div>
-                    <div class="breakdown-row">
-                        <span class="breakdown-label">
-                            <span>📊</span> Charge Rate
-                        </span>
-                        <span class="breakdown-value" id="breakdown-rate">৳14.90 per 1000</span>
-                    </div>
-                    <div class="breakdown-row">
-                        <span class="breakdown-label">
-                            <span>💸</span> Charge Amount
-                        </span>
-                        <span class="breakdown-value highlight" id="breakdown-charge">৳0</span>
-                    </div>
-                    <div class="breakdown-row" style="border-top: 2px solid var(--border); margin-top: 8px; padding-top: 16px;">
-                        <span class="breakdown-label">
-                            <span>✅</span> Net Cash Out
-                        </span>
-                        <span class="breakdown-value highlight" id="breakdown-net">৳0</span>
-                    </div>
+                <div class="breakdown" id="breakdownContainer">
+                    <!-- dynamic content -->
                 </div>
             </div>
 
-            <!-- Quick Info -->
+            <!-- Static Info Cards -->
             <div class="info-grid">
                 <div class="info-card">
-                    <div class="info-icon">🏧</div>
-                    <div class="info-title">ATM Cash Out</div>
-                    <div class="info-value">৳14.90/1000</div>
+                    <div class="info-icon">🏦</div>
+                    <div class="info-title">Cash Out Fee</div>
+                    <div class="info-value">14.90 / 15 / 18.50 ৳</div>
                 </div>
                 <div class="info-card">
-                    <div class="info-icon">🏪</div>
-                    <div class="info-title">Priyo Agent</div>
-                    <div class="info-value">৳14.90/1000</div>
+                    <div class="info-icon">📊</div>
+                    <div class="info-title">Per 1000 TK</div>
+                    <div class="info-value">+ applicable charge</div>
                 </div>
             </div>
-
-            <!-- Spacer to push footer down -->
             <div class="scroll-spacer"></div>
-
-            <!-- Footer - Mini at bottom -->
-            <footer class="footer">
-                <div class="developer">Made with ❤️ by Shishir</div>
-                <a href="https://www.facebook.com/imshishr" target="_blank" class="facebook-link" onclick="handleFacebookClick(event)">
-                    <svg class="facebook-icon" viewBox="0 0 24 24">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                    Facebook
-                </a>
-            </footer>
         </main>
 
-        <!-- Toast -->
-        <div class="toast" id="toast">Copied to clipboard!</div>
+        <footer class="footer">
+            <div class="developer">Developed for Bangladesh</div>
+            <a href="#" class="facebook-link" target="_blank">
+                <svg class="facebook-icon" viewBox="0 0 24 24" width="12" height="12"><path fill="currentColor" d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+                fb.me/cashoutapp
+            </a>
+        </footer>
     </div>
+    <div id="toastMsg" class="toast"></div>
 
     <script>
-        // State
-        let selectedRate = null;
-        let isCustomRate = false;
-        let currentTheme = localStorage.getItem('theme') || 'light';
+        // ---------- DOM Elements ----------
+        const amountInput = document.getElementById('amountInput');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resultCard = document.getElementById('resultCard');
+        const resultAmountSpan = document.getElementById('resultAmount');
+        const resultTitleSpan = document.getElementById('resultTitle');
+        const breakdownContainer = document.getElementById('breakdownContainer');
+        const modeSubtitle = document.getElementById('modeSubtitle');
+        const amountFieldLabel = document.getElementById('amountFieldLabel');
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            updateThemeIcon();
-            
-            // Check for saved rate preference
-            const savedRate = localStorage.getItem('preferredRate');
-            if (savedRate) {
-                const rate = parseFloat(savedRate);
-                if (rate === 14.90) selectRate(14.90, 'priyo');
-                else if (rate === 18.50) selectRate(18.50, 'regular');
-                else {
-                    toggleCustomRate();
-                    document.getElementById('custom-rate').value = rate;
-                    handleCustomRateInput(rate);
-                }
-            } else {
-                selectRate(14.90, 'priyo'); // Default
-            }
-        });
+        // Rate buttons
+        const rateBtns = document.querySelectorAll('.rate-btn');
+        const customToggle = document.getElementById('customToggle');
+        const customInputPanel = document.getElementById('customInputPanel');
+        const customRateInput = document.getElementById('customRateValue');
+        const applyCustomBtn = document.getElementById('applyCustomBtn');
 
-        // Theme Toggle
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
-            updateThemeIcon();
-        }
+        // Mode state
+        let currentMode = 'balance';   // 'balance' or 'charge'
+        let selectedRate = 14.90;      // default bKash
+        let activeRateElement = null;   // track active button
+        let customActive = false;
+        let customRateValue = 14.90;
 
-        function updateThemeIcon() {
-            document.getElementById('theme-icon').textContent = currentTheme === 'light' ? '🌙' : '☀️';
-        }
-
-        // Rate Selection
-        function selectRate(rate, type) {
-            selectedRate = rate;
-            isCustomRate = false;
-            
-            // Get button elements
-            const btn149 = document.getElementById('rate-14.90');
-            const btn185 = document.getElementById('rate-18.50');
-            const customToggle = document.getElementById('custom-toggle');
-            const customContainer = document.getElementById('custom-rate-container');
-            
-            // Remove active from all
-            btn149.classList.remove('active');
-            btn185.classList.remove('active');
-            customToggle.classList.remove('active');
-            customContainer.classList.remove('show');
-            
-            // Add active to selected
-            if (rate === 14.90) {
-                btn149.classList.add('active');
-            } else if (rate === 18.50) {
-                btn185.classList.add('active');
-            }
-            
-            // Save preference
-            localStorage.setItem('preferredRate', rate);
-            
-            // Clear custom input
-            document.getElementById('custom-rate').value = '';
-            
-            // Debug
-            console.log('Selected rate:', rate);
-            console.log('Button 14.90 classes:', btn149.classList.toString());
-            console.log('Button 18.50 classes:', btn185.classList.toString());
-            
-            // Haptic feedback if available
-            if (navigator.vibrate) navigator.vibrate(10);
-        }
-
-        function toggleCustomRate() {
-            isCustomRate = !isCustomRate;
-            const container = document.getElementById('custom-rate-container');
-            const toggle = document.getElementById('custom-toggle');
-            const btn149 = document.getElementById('rate-14.90');
-            const btn185 = document.getElementById('rate-18.50');
-            
-            // Clear preset buttons
-            btn149.classList.remove('active');
-            btn185.classList.remove('active');
-            
-            if (isCustomRate) {
-                container.classList.add('show');
-                toggle.classList.add('active');
-                setTimeout(() => document.getElementById('custom-rate').focus(), 100);
-                selectedRate = parseFloat(document.getElementById('custom-rate').value) || null;
-            } else {
-                container.classList.remove('show');
-                toggle.classList.remove('active');
-                // Revert to default if no rate selected
-                if (!selectedRate) selectRate(14.90, 'priyo');
-            }
-            
-            if (navigator.vibrate) navigator.vibrate(10);
-        }
-
-        function handleCustomRateInput(value) {
-            const rate = parseFloat(value);
-            if (rate && rate > 0) {
-                selectedRate = rate;
-                localStorage.setItem('preferredRate', rate);
-            }
-        }
-
-        // Calculation Logic
-        function calculate() {
-            const balanceInput = document.getElementById('balance');
-            const balance = parseFloat(balanceInput.value);
-            
-            if (!balance || balance <= 0) {
-                showToast('Please enter a valid balance amount');
-                balanceInput.focus();
-                return;
-            }
-            
-            if (!selectedRate || selectedRate <= 0) {
-                showToast('Please select a charge rate');
-                return;
-            }
-            
-            // Calculate: If balance = cashOut + charge, and charge = (cashOut/1000)*rate
-            // Then: balance = cashOut + (cashOut*rate/1000)
-            // balance = cashOut * (1 + rate/1000)
-            // cashOut = balance / (1 + rate/1000)
-            
-            const divisor = 1 + (selectedRate / 1000);
-            const cashOutAmount = balance / divisor;
-            const chargeAmount = balance - cashOutAmount;
-            
-            // Display Results
-            displayResults(balance, cashOutAmount, chargeAmount, selectedRate);
-        }
-
-        function displayResults(balance, cashOut, charge, rate) {
-            const resultCard = document.getElementById('result');
-            
-            // Format numbers
-            const formatCurrency = (num) => '৳' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            
-            // Update values
-            document.getElementById('result-amount').textContent = formatCurrency(cashOut);
-            document.getElementById('breakdown-balance').textContent = formatCurrency(balance);
-            document.getElementById('breakdown-rate').textContent = '৳' + rate.toFixed(2) + ' per 1000';
-            document.getElementById('breakdown-charge').textContent = formatCurrency(charge);
-            document.getElementById('breakdown-net').textContent = formatCurrency(cashOut);
-            
-            // Update badge
-            const badge = document.getElementById('rate-badge');
-            if (isCustomRate || (rate !== 14.90 && rate !== 18.50)) {
-                badge.textContent = '৳' + rate.toFixed(2) + ' (Custom)';
-                badge.classList.add('custom');
-            } else if (rate === 14.90) {
-                badge.textContent = '৳14.90 (Priyo/ATM)';
-                badge.classList.remove('custom');
-            } else {
-                badge.textContent = '৳18.50 (Regular)';
-                badge.classList.remove('custom');
-            }
-            
-            // Show result
-            resultCard.classList.add('show');
-            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            
-            // Add pulse animation briefly
-            resultCard.classList.add('pulse');
-            setTimeout(() => resultCard.classList.remove('pulse'), 2000);
-            
-            // Copy to clipboard automatically
-            copyToClipboard(cashOut.toFixed(2));
-        }
-
-        // Utility Functions
-        function copyToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('Amount copied: ৳' + text);
-                });
-            }
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
+        // Helper: show toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toastMsg');
+            toast.textContent = msg;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        function handleFacebookClick(e) {
-            // Ensure link opens in new tab properly
-            window.open('https://www.facebook.com/imshishr', '_blank', 'noopener,noreferrer');
-            e.preventDefault();
+        // Update active style for rate buttons & custom toggle
+        function setActiveRate(rateValue, isCustom = false, sourceElement = null) {
+            // Remove active from all default buttons
+            rateBtns.forEach(btn => btn.classList.remove('active'));
+            if (!isCustom) {
+                customToggle.classList.remove('active');
+                customActive = false;
+                customInputPanel.classList.remove('show');
+                if (sourceElement) sourceElement.classList.add('active');
+                selectedRate = rateValue;
+                customRateValue = rateValue;
+                customRateInput.value = rateValue;
+            } else {
+                // custom mode
+                customToggle.classList.add('active');
+                customActive = true;
+                customInputPanel.classList.add('show');
+                selectedRate = rateValue;
+                customRateValue = rateValue;
+                customRateInput.value = rateValue;
+                // ensure no default rate active
+            }
         }
 
-        // Enter key support
-        document.getElementById('balance').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') calculate();
-        });
-        
-        document.getElementById('custom-rate').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const balanceInput = document.getElementById('balance');
-                if (!balanceInput.value) {
-                    balanceInput.focus();
+        // Handle rate selection from default buttons
+        function handleRateClick(btn, rateVal) {
+            setActiveRate(rateVal, false, btn);
+        }
+
+        // Apply custom rate
+        function applyCustomRate() {
+            let val = parseFloat(customRateInput.value);
+            if (isNaN(val) || val <= 0) {
+                showToast('Please enter a valid positive rate', 1500);
+                return;
+            }
+            val = parseFloat(val.toFixed(2));
+            setActiveRate(val, true, null);
+            showToast(`Custom rate ${val} ৳/1000 applied`, 1200);
+        }
+
+        // Update UI based on mode (labels, result card reset)
+        function updateModeUI() {
+            if (currentMode === 'balance') {
+                modeSubtitle.textContent = 'Calculate net cashout after bKash/Nagad charge';
+                amountFieldLabel.innerHTML = '<span>💰</span> Your Balance (Amount to cashout)';
+                resultTitleSpan.textContent = 'You\'ll Receive';
+            } else {
+                modeSubtitle.textContent = 'Calculate total payable with charge included';
+                amountFieldLabel.innerHTML = '<span>💸</span> Cash Out Amount (Before Charge)';
+                resultTitleSpan.textContent = 'Total Amount with Charge';
+            }
+            // Hide previous result when mode changes
+            resultCard.classList.remove('show');
+        }
+
+        // Core calculation: returns { charge, finalAmount, rateUsed }
+        function compute(amount, ratePerThousand) {
+            if (isNaN(amount) || amount <= 0) return null;
+            const charge = (amount / 1000) * ratePerThousand;
+            return {
+                charge: charge,
+                finalAmount: (currentMode === 'balance') ? (amount - charge) : (amount + charge),
+                rateUsed: ratePerThousand
+            };
+        }
+
+        // Render result based on current mode & selected rate & amount
+        function performCalculation() {
+            let rawAmount = parseFloat(amountInput.value);
+            if (isNaN(rawAmount) || rawAmount <= 0) {
+                showToast('Please enter a valid amount (greater than 0)', 1500);
+                resultCard.classList.remove('show');
+                return;
+            }
+            const amount = rawAmount;
+            let rate = selectedRate;
+            if (isNaN(rate) || rate <= 0) rate = 14.90;
+
+            const result = compute(amount, rate);
+            if (!result) {
+                showToast('Calculation error', 1000);
+                return;
+            }
+
+            const { charge, finalAmount, rateUsed } = result;
+            if ((currentMode === 'balance' && finalAmount < 0) || (currentMode === 'charge' && finalAmount < 0)) {
+                showToast('Charge exceeds amount!', 1500);
+                resultCard.classList.remove('show');
+                return;
+            }
+
+            // Update result amount
+            resultAmountSpan.innerHTML = `${finalAmount.toFixed(2)} ৳`;
+            
+            // Build breakdown HTML
+            let breakdownHTML = '';
+            if (currentMode === 'balance') {
+                breakdownHTML = `
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">💰 Cashout Amount</div>
+                        <div class="breakdown-value">${amount.toFixed(2)} ৳</div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">⚡ Service Charge</div>
+                        <div class="breakdown-value">${charge.toFixed(2)} ৳</div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">📊 Rate Applied</div>
+                        <div class="breakdown-value"><span class="rate-badge">${rateUsed.toFixed(2)} ৳ / 1000</span></div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">✅ Net Receivable</div>
+                        <div class="breakdown-value highlight">${finalAmount.toFixed(2)} ৳</div>
+                    </div>
+                `;
+            } else {
+                // Charge calculator mode
+                breakdownHTML = `
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">💵 Original Amount</div>
+                        <div class="breakdown-value">${amount.toFixed(2)} ৳</div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">📈 Charge Amount</div>
+                        <div class="breakdown-value">${charge.toFixed(2)} ৳</div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">⚙️ Rate Applied</div>
+                        <div class="breakdown-value"><span class="rate-badge">${rateUsed.toFixed(2)} ৳ / 1000</span></div>
+                    </div>
+                    <div class="breakdown-row">
+                        <div class="breakdown-label">🧾 Total Payable</div>
+                        <div class="breakdown-value highlight">${finalAmount.toFixed(2)} ৳</div>
+                    </div>
+                `;
+            }
+            breakdownContainer.innerHTML = breakdownHTML;
+            resultCard.classList.add('show');
+        }
+
+        // Switch mode function
+        function setMode(mode) {
+            currentMode = mode;
+            // update active class on mode buttons
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                if (btn.getAttribute('data-mode') === mode) {
+                    btn.classList.add('active');
                 } else {
-                    calculate();
+                    btn.classList.remove('active');
                 }
-            }
-        });
-
-        // Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
-                self.addEventListener('install', e => self.skipWaiting());
-                self.addEventListener('activate', e => e.waitUntil(clients.claim()));
-                self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
-            `)).catch(() => console.log('SW registration skipped'));
+            });
+            updateModeUI();
+            // optionally recalc if there's input & result visible? better to recalc on demand, but we just clear result
+            resultCard.classList.remove('show');
+            // but keep input for convenience
         }
 
-        // Prevent zoom on double tap
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', (e) => {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                e.preventDefault();
+        // Theme handling (dark/light)
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            let theme = saved || (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Setup event listeners
+        function bindEvents() {
+            // Mode switching
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const mode = btn.getAttribute('data-mode');
+                    if (mode === 'balance' || mode === 'charge') setMode(mode);
+                });
+            });
+            // Rate default buttons
+            rateBtns.forEach(btn => {
+                const rateVal = parseFloat(btn.getAttribute('data-rate'));
+                btn.addEventListener('click', () => handleRateClick(btn, rateVal));
+            });
+            // Custom toggle
+            customToggle.addEventListener('click', () => {
+                if (!customActive) {
+                    // activate custom with current customRateValue
+                    setActiveRate(customRateValue, true, null);
+                } else {
+                    // if already custom, we do nothing but maybe keep
+                }
+            });
+            applyCustomBtn.addEventListener('click', applyCustomRate);
+            calculateBtn.addEventListener('click', performCalculation);
+            // Enter key support on amount input
+            amountInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performCalculation();
+            });
+            // Theme toggle
+            document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
+        }
+
+        // Set default selected rate on load (bKash active)
+        function initializeDefaultRate() {
+            const defaultBtn = document.querySelector('.rate-btn[data-rate="14.90"]');
+            if (defaultBtn) {
+                handleRateClick(defaultBtn, 14.90);
+            } else {
+                selectedRate = 14.90;
+                customRateValue = 14.90;
             }
-            lastTouchEnd = now;
-        }, false);
+            customRateInput.value = 14.90;
+        }
+
+        // Main init
+        function init() {
+            initTheme();
+            bindEvents();
+            initializeDefaultRate();
+            setMode('balance');   // default mode: balance calculator
+        }
+        
+        init();
     </script>
 </body>
 </html>
