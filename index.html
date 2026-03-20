@@ -99,6 +99,7 @@
             position: relative;
             z-index: 10;
             box-shadow: var(--shadow-md);
+            flex-shrink: 0;
         }
 
         .header-top {
@@ -180,6 +181,7 @@
             padding: 24px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .input-group {
@@ -250,68 +252,63 @@
             margin-bottom: 12px;
         }
 
-        .rate-btn {
-            padding: 16px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--surface);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .rate-btn.active {
-            border-color: var(--primary);
-            background: rgba(209, 32, 83, 0.05);
-        }
-
-        .rate-btn.active::after {
-            content: '✓';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 20px;
-            height: 20px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
+        /* Default state - not selected */
+        button.rate-btn {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
+            gap: 4px;
+            padding: 16px;
+            background: var(--input-bg) !important;
+            border: 2px dashed var(--border) !important;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            -webkit-appearance: none;
+            appearance: none;
+            color: inherit;
+        }
+
+        /* Selected state - MUST override default */
+        button.rate-btn.active {
+            background: var(--primary) !important;
+            border: 2px solid var(--primary) !important;
+            color: white !important;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(209, 32, 83, 0.4);
+        }
+
+        button.rate-btn.active .rate-amount {
+            color: white !important;
+        }
+
+        button.rate-btn.active .rate-label {
+            color: rgba(255,255,255,0.9) !important;
         }
 
         .rate-amount {
             font-size: 20px;
             font-weight: 800;
             color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .rate-btn.active .rate-amount {
-            color: var(--primary);
+            transition: color 0.3s ease;
         }
 
         .rate-label {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .rate-btn.active .rate-label {
-            color: var(--primary);
             font-weight: 600;
+            transition: color 0.3s ease;
         }
 
+        /* Custom toggle - same styling logic */
         .custom-rate-toggle {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 12px;
+            padding: 14px;
             background: var(--input-bg);
             border: 2px dashed var(--border);
             border-radius: var(--radius-sm);
@@ -320,13 +317,16 @@
             font-weight: 600;
             color: var(--text-secondary);
             transition: all 0.3s ease;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .custom-rate-toggle.active {
-            border-color: var(--primary);
-            border-style: solid;
-            background: rgba(209, 32, 83, 0.05);
-            color: var(--primary);
+            background: var(--primary);
+            border: 2px solid var(--primary);
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(209, 32, 83, 0.4);
         }
 
         .custom-rate-input {
@@ -352,10 +352,10 @@
 
         .custom-input {
             flex: 1;
-            padding: 12px 16px;
-            font-size: 18px;
-            font-weight: 600;
-            border: 2px solid var(--border);
+            padding: 14px 16px;
+            font-size: 20px;
+            font-weight: 700;
+            border: 3px solid var(--primary);
             border-radius: var(--radius-sm);
             background: var(--input-bg);
             color: var(--text-primary);
@@ -363,7 +363,7 @@
         }
 
         .custom-input:focus {
-            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(209, 32, 83, 0.1);
         }
 
         /* Calculate Button */
@@ -384,6 +384,8 @@
             justify-content: center;
             gap: 10px;
             margin-top: 8px;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .calculate-btn:active {
@@ -404,6 +406,7 @@
             border: 2px solid var(--primary);
             display: none;
             animation: slideUp 0.4s ease;
+            flex-shrink: 0;
         }
 
         .result-card.show {
@@ -503,6 +506,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-top: 8px;
+            flex-shrink: 0;
         }
 
         .info-card {
@@ -531,30 +535,39 @@
             color: var(--text-primary);
         }
 
-        /* Footer */
+        /* Scrollable spacer to push footer down */
+        .scroll-spacer {
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        /* Footer - Mini at bottom */
         .footer {
-            padding: 20px 24px;
+            padding: 16px 24px 24px;
             text-align: center;
             background: var(--surface);
             border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            margin-top: auto;
         }
 
         .developer {
-            font-size: 14px;
+            font-size: 11px;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+            opacity: 0.8;
         }
 
         .facebook-link {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             color: var(--facebook-blue);
             text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            padding: 8px 16px;
-            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
             background: rgba(24, 119, 242, 0.1);
             transition: all 0.3s ease;
         }
@@ -565,8 +578,8 @@
         }
 
         .facebook-icon {
-            width: 20px;
-            height: 20px;
+            width: 12px;
+            height: 12px;
             fill: currentColor;
         }
 
@@ -600,6 +613,9 @@
             }
             .result-amount {
                 font-size: 36px;
+            }
+            .rate-amount {
+                font-size: 18px;
             }
         }
 
@@ -672,24 +688,24 @@
                     </label>
                     <div class="rate-section">
                         <div class="rate-grid">
-                            <button class="rate-btn" id="rate-14.90" onclick="selectRate(14.90, 'priyo')">
+                            <button type="button" class="rate-btn" id="rate-14.90" onclick="selectRate(14.90, 'priyo')">
                                 <div class="rate-amount">৳14.90</div>
                                 <div class="rate-label">Priyo Agent / ATM</div>
                             </button>
-                            <button class="rate-btn" id="rate-18.50" onclick="selectRate(18.50, 'regular')">
+                            <button type="button" class="rate-btn" id="rate-18.50" onclick="selectRate(18.50, 'regular')">
                                 <div class="rate-amount">৳18.50</div>
                                 <div class="rate-label">Regular Agent</div>
                             </button>
                         </div>
                         
-                        <div class="custom-rate-toggle" id="custom-toggle" onclick="toggleCustomRate()">
+                        <button type="button" class="custom-rate-toggle" id="custom-toggle" onclick="toggleCustomRate()">
                             <span>⚙️</span>
                             <span>Use Custom Rate</span>
-                        </div>
+                        </button>
                         
                         <div class="custom-rate-input" id="custom-rate-container">
                             <div class="custom-input-wrapper">
-                                <span style="font-size: 18px; font-weight: 700; color: var(--primary);">৳</span>
+                                <span style="font-size: 20px; font-weight: 700; color: var(--primary);">৳</span>
                                 <input 
                                     type="number" 
                                     class="custom-input" 
@@ -704,7 +720,7 @@
                     </div>
                 </div>
 
-                <button class="calculate-btn" onclick="calculate()">
+                <button type="button" class="calculate-btn" onclick="calculate()">
                     <span>🧮</span>
                     <span>Calculate Cash Out</span>
                 </button>
@@ -761,18 +777,21 @@
                     <div class="info-value">৳14.90/1000</div>
                 </div>
             </div>
-        </main>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="developer">Made with ❤️ by Shishir</div>
-            <a href="https://www.facebook.com/imshishr" target="_blank" class="facebook-link" onclick="handleFacebookClick(event)">
-                <svg class="facebook-icon" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-                Facebook
-            </a>
-        </footer>
+            <!-- Spacer to push footer down -->
+            <div class="scroll-spacer"></div>
+
+            <!-- Footer - Mini at bottom -->
+            <footer class="footer">
+                <div class="developer">Made with ❤️ by Shishir</div>
+                <a href="https://www.facebook.com/imshishr" target="_blank" class="facebook-link" onclick="handleFacebookClick(event)">
+                    <svg class="facebook-icon" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Facebook
+                </a>
+            </footer>
+        </main>
 
         <!-- Toast -->
         <div class="toast" id="toast">Copied to clipboard!</div>
@@ -822,29 +841,55 @@
             selectedRate = rate;
             isCustomRate = false;
             
-            // Update UI
-            document.querySelectorAll('.rate-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`rate-${rate}`).classList.add('active');
-            document.getElementById('custom-toggle').classList.remove('active');
-            document.getElementById('custom-rate-container').classList.remove('show');
+            // Get button elements
+            const btn149 = document.getElementById('rate-14.90');
+            const btn185 = document.getElementById('rate-18.50');
+            const customToggle = document.getElementById('custom-toggle');
+            const customContainer = document.getElementById('custom-rate-container');
+            
+            // Remove active from all
+            btn149.classList.remove('active');
+            btn185.classList.remove('active');
+            customToggle.classList.remove('active');
+            customContainer.classList.remove('show');
+            
+            // Add active to selected
+            if (rate === 14.90) {
+                btn149.classList.add('active');
+            } else if (rate === 18.50) {
+                btn185.classList.add('active');
+            }
             
             // Save preference
             localStorage.setItem('preferredRate', rate);
             
             // Clear custom input
             document.getElementById('custom-rate').value = '';
+            
+            // Debug
+            console.log('Selected rate:', rate);
+            console.log('Button 14.90 classes:', btn149.classList.toString());
+            console.log('Button 18.50 classes:', btn185.classList.toString());
+            
+            // Haptic feedback if available
+            if (navigator.vibrate) navigator.vibrate(10);
         }
 
         function toggleCustomRate() {
             isCustomRate = !isCustomRate;
             const container = document.getElementById('custom-rate-container');
             const toggle = document.getElementById('custom-toggle');
+            const btn149 = document.getElementById('rate-14.90');
+            const btn185 = document.getElementById('rate-18.50');
+            
+            // Clear preset buttons
+            btn149.classList.remove('active');
+            btn185.classList.remove('active');
             
             if (isCustomRate) {
                 container.classList.add('show');
                 toggle.classList.add('active');
-                document.querySelectorAll('.rate-btn').forEach(btn => btn.classList.remove('active'));
-                document.getElementById('custom-rate').focus();
+                setTimeout(() => document.getElementById('custom-rate').focus(), 100);
                 selectedRate = parseFloat(document.getElementById('custom-rate').value) || null;
             } else {
                 container.classList.remove('show');
@@ -852,6 +897,8 @@
                 // Revert to default if no rate selected
                 if (!selectedRate) selectRate(14.90, 'priyo');
             }
+            
+            if (navigator.vibrate) navigator.vibrate(10);
         }
 
         function handleCustomRateInput(value) {
