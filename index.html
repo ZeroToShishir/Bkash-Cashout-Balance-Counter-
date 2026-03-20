@@ -5,103 +5,118 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cashout Counter</title>
 
+<link rel="manifest" href="manifest.json">
+
 <style>
 :root {
   --primary: #D12053;
   --bg: #ffffff;
+  --card: #f8f8f8;
   --text: #111;
 }
 
 body.dark {
   --bg: #121212;
-  --text: #ffffff;
+  --card: #1e1e1e;
+  --text: #fff;
 }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--text);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   transition: 0.3s;
 }
 
 .container {
-  width: 90%;
-  max-width: 400px;
-  background: var(--bg);
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  text-align: center;
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
 }
 
 h1 {
+  text-align: center;
   color: var(--primary);
-  margin-bottom: 20px;
+}
+
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-top: 15px;
 }
 
 input {
-  width: 90%;
+  width: 100%;
   padding: 15px;
   font-size: 18px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #ccc;
-  margin-bottom: 20px;
+  margin-top: 10px;
 }
 
-.buttons {
+.rate-buttons {
   display: flex;
   gap: 10px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-button {
-  padding: 15px;
-  font-size: 16px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+  margin-top: 15px;
 }
 
 .rate-btn {
-  background: var(--primary);
-  color: white;
   flex: 1;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  background: #ccc;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.rate-btn.active {
+  background: var(--primary);
+  color: #fff;
 }
 
 .calculate {
   width: 100%;
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
   background: black;
   color: white;
-  margin-top: 10px;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 .result {
+  text-align: center;
+  font-size: 26px;
   margin-top: 20px;
-  font-size: 22px;
   font-weight: bold;
 }
 
-.toggle {
-  margin-top: 15px;
+.mode-toggle {
+  text-align: center;
+  margin-top: 10px;
   cursor: pointer;
-  font-size: 14px;
 }
 
 .footer {
-  margin-top: 25px;
-  font-size: 14px;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .footer a {
   color: #1877F2;
   text-decoration: none;
   font-weight: bold;
+}
+
+.small {
+  font-size: 13px;
+  opacity: 0.7;
 }
 </style>
 </head>
@@ -111,18 +126,24 @@ button {
 <div class="container">
   <h1>Cashout Counter</h1>
 
-  <input type="number" id="balance" placeholder="Enter Balance (৳)">
+  <div class="card">
+    <label>Enter Balance (৳)</label>
+    <input type="number" id="balance" placeholder="e.g. 5250">
 
-  <div class="buttons">
-    <button class="rate-btn" onclick="setRate(14.90)">14.90</button>
-    <button class="rate-btn" onclick="setRate(18.50)">18.50</button>
+    <div class="rate-buttons">
+      <button id="r1" class="rate-btn" onclick="selectRate(14.90, 'Preset 14.90')">14.90</button>
+      <button id="r2" class="rate-btn" onclick="selectRate(18.50, 'Preset 18.50')">18.50</button>
+    </div>
+
+    <input type="number" id="manualRate" placeholder="Custom Rate (per 1000)" oninput="manualSelect()">
+
+    <button class="calculate" onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result">৳ 0.00</div>
+    <div class="small" id="rateInfo">No rate selected</div>
   </div>
 
-  <button class="calculate" onclick="calculate()">Calculate</button>
-
-  <div class="result" id="result">৳ 0.00</div>
-
-  <div class="toggle" onclick="toggleMode()">🌙 Toggle Day/Night</div>
+  <div class="mode-toggle" onclick="toggleMode()">🌙 Toggle Day/Night</div>
 
   <div class="footer">
     Made by Shishir <br>
@@ -131,17 +152,53 @@ button {
 </div>
 
 <script>
-let selectedRate = 14.90;
+let selectedRate = null;
+let rateLabel = "";
 
-function setRate(rate) {
-  selectedRate = rate;
+// Highlight selection
+function clearActive() {
+  document.getElementById("r1").classList.remove("active");
+  document.getElementById("r2").classList.remove("active");
 }
 
+// Preset rate select
+function selectRate(rate, label) {
+  selectedRate = rate;
+  rateLabel = label;
+
+  clearActive();
+
+  if (rate === 14.90) document.getElementById("r1").classList.add("active");
+  if (rate === 18.50) document.getElementById("r2").classList.add("active");
+
+  document.getElementById("manualRate").value = "";
+  updateRateInfo();
+}
+
+// Manual rate
+function manualSelect() {
+  let val = parseFloat(document.getElementById("manualRate").value);
+
+  if (val > 0) {
+    selectedRate = val;
+    rateLabel = "Custom Rate: " + val;
+
+    clearActive();
+    updateRateInfo();
+  }
+}
+
+// Update label
+function updateRateInfo() {
+  document.getElementById("rateInfo").innerText = "Using: " + rateLabel;
+}
+
+// Calculate
 function calculate() {
   let balance = parseFloat(document.getElementById("balance").value);
 
-  if (!balance || balance <= 0) {
-    alert("Enter valid amount");
+  if (!balance || balance <= 0 || !selectedRate) {
+    alert("Enter balance & select rate");
     return;
   }
 
@@ -151,8 +208,14 @@ function calculate() {
     "৳ " + cashout.toFixed(2);
 }
 
+// Dark mode
 function toggleMode() {
   document.body.classList.toggle("dark");
+}
+
+// PWA service worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
 }
 </script>
 
