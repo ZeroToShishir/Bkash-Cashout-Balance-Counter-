@@ -1,223 +1,990 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cashout Counter</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#D12053">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Cashout Counter">
+    <meta name="description" content="Calculate bKash cash out amounts with charges - Professional calculator for Bangladesh">
+    <title>Cashout Counter</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ2FzaG91dCBDb3VudGVyIiwic2hvcnRfbmFtZSI6IkNhc2hvdXQiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI0QxMjA1MyIsInRoZW1lX2NvbG9yIjoiI0QxMjA1MyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5alpYSjBMWFpsY25OcGIyNGlJSGRwWkhSb1BTSXlOVEFpSUdobGFXZG9kRDBpTWpVd0lpQjJhV1YzUW05NFBTSXdJajQ4YzNabklIZHBaSFJvUFNJeU5UQWlJR2hsYVdkb2REMGliVzlpWjJVPklqNDhkSE53SUdadmJuUTlJbU52YlhCc1pYTWlJR2x1Wm05eWJXRjBhR2x1WjBOdmJuUmxiblJwZEhrOUlpSWdlRzFzYm5NNmVHMXNibk05SW1oMGRIQTZMeTkzZDNjdWQzTXViM0puTHpJd01EQXZaR1ZzWVhrdlJHRnVaR1Z5Y3k5bWFXeGxMMkZ3Y0d4cFkyRmliR3h6TDJsdVpHVjRMWFZ6WlhJdFlYQndZV05sYkhNdGJXRjBhWFJoY21sdVl5MXdZWEJ6YVdOaGJHRnlaQzF3Y21GamRHbGhiUzF6YjJaMGQyRnlaWE11WTI5dElqNEtQQzl6ZG1jKyIsInNpemUiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+    
+    <style>
+        :root {
+            --primary: #D12053;
+            --primary-dark: #b01a45;
+            --primary-light: #ff1a6b;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --facebook-blue: #1877F2;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+            --radius: 16px;
+            --radius-sm: 12px;
+        }
 
-<link rel="manifest" href="manifest.json">
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --surface: #1a1a1a;
+            --surface-elevated: #242424;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border: #333333;
+            --input-bg: #2a2a2a;
+        }
 
-<style>
-:root {
-  --primary: #D12053;
-  --bg: #ffffff;
-  --card: #f8f8f8;
-  --text: #111;
-}
+        [data-theme="light"] {
+            --bg: #f5f5f5;
+            --surface: #ffffff;
+            --surface-elevated: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border: #e0e0e0;
+            --input-bg: #f8f9fa;
+        }
 
-body.dark {
-  --bg: #121212;
-  --card: #1e1e1e;
-  --text: #fff;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
 
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  transition: 0.3s;
-}
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
 
-.container {
-  max-width: 420px;
-  margin: auto;
-  padding: 20px;
-}
+        body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--text-primary);
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
 
-h1 {
-  text-align: center;
-  color: var(--primary);
-}
+        .app-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg);
+            position: relative;
+        }
 
-.card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  margin-top: 15px;
-}
+        /* Header */
+        .header {
+            background: var(--primary);
+            padding: 20px 24px;
+            color: white;
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--shadow-md);
+        }
 
-input {
-  width: 100%;
-  padding: 15px;
-  font-size: 18px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  margin-top: 10px;
-}
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
 
-.rate-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
+        .app-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.rate-btn {
-  flex: 1;
-  padding: 15px;
-  border-radius: 12px;
-  border: none;
-  background: #ccc;
-  font-size: 16px;
-  cursor: pointer;
-}
+        .app-icon {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 20px;
+        }
 
-.rate-btn.active {
-  background: var(--primary);
-  color: #fff;
-}
+        .theme-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
 
-.calculate {
-  width: 100%;
-  margin-top: 15px;
-  padding: 15px;
-  border-radius: 12px;
-  border: none;
-  background: black;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-}
+        .theme-toggle:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,0.3);
+        }
 
-.result {
-  text-align: center;
-  font-size: 26px;
-  margin-top: 20px;
-  font-weight: bold;
-}
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
 
-.mode-toggle {
-  text-align: center;
-  margin-top: 10px;
-  cursor: pointer;
-}
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
 
-.footer {
-  text-align: center;
-  margin-top: 20px;
-}
+        .main-content::-webkit-scrollbar {
+            width: 0;
+        }
 
-.footer a {
-  color: #1877F2;
-  text-decoration: none;
-  font-weight: bold;
-}
+        /* Input Section */
+        .input-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
 
-.small {
-  font-size: 13px;
-  opacity: 0.7;
-}
-</style>
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 18px 16px 18px 44px;
+            font-size: 24px;
+            font-weight: 700;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .amount-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(209, 32, 83, 0.1);
+        }
+
+        .amount-input::placeholder {
+            color: var(--gray-400);
+            font-weight: 500;
+        }
+
+        /* Rate Selection */
+        .rate-section {
+            margin-top: 8px;
+        }
+
+        .rate-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rate-btn {
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rate-btn.active {
+            border-color: var(--primary);
+            background: rgba(209, 32, 83, 0.05);
+        }
+
+        .rate-btn.active::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .rate-amount {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .rate-btn.active .rate-amount {
+            color: var(--primary);
+        }
+
+        .rate-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .rate-btn.active .rate-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .custom-rate-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .custom-rate-toggle.active {
+            border-color: var(--primary);
+            border-style: solid;
+            background: rgba(209, 32, 83, 0.05);
+            color: var(--primary);
+        }
+
+        .custom-rate-input {
+            display: none;
+            margin-top: 12px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .custom-rate-input.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .custom-input {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .custom-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Calculate Button */
+        .calculate-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(209, 32, 83, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .calculate-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(209, 32, 83, 0.3);
+        }
+
+        .calculate-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Result Section */
+        .result-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid var(--primary);
+            display: none;
+            animation: slideUp 0.4s ease;
+        }
+
+        .result-card.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed var(--border);
+        }
+
+        .result-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .result-amount {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .result-currency {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .breakdown {
+            display: grid;
+            gap: 12px;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .breakdown-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breakdown-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .breakdown-value.highlight {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .rate-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(209, 32, 83, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .rate-badge.custom {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .info-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .info-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .info-title {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px 24px;
+            text-align: center;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+
+        .developer {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .facebook-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--facebook-blue);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(24, 119, 242, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .facebook-link:active {
+            transform: scale(0.95);
+            background: rgba(24, 119, 242, 0.2);
+        }
+
+        .facebook-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--gray-800);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 380px) {
+            .app-title {
+                font-size: 24px;
+            }
+            .result-amount {
+                font-size: 36px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Pulse animation for result */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="app-title">
+                    <div class="app-icon">৳</div>
+                    Cashout Counter
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+            <div class="subtitle">Calculate bKash Cash Out with Charges</div>
+        </header>
 
-<div class="container">
-  <h1>Cashout Counter</h1>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Card -->
+            <div class="input-card">
+                <div class="input-group">
+                    <label class="input-label">
+                        <span>💰</span> Your Balance
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="currency-symbol">৳</span>
+                        <input 
+                            type="number" 
+                            class="amount-input" 
+                            id="balance" 
+                            placeholder="Enter amount (e.g. 5250)"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                        >
+                    </div>
+                </div>
 
-  <div class="card">
-    <label>Enter Balance (৳)</label>
-    <input type="number" id="balance" placeholder="e.g. 5250">
+                <div class="input-group">
+                    <label class="input-label">
+                        <span>⚡</span> Select Charge Rate
+                    </label>
+                    <div class="rate-section">
+                        <div class="rate-grid">
+                            <button class="rate-btn" id="rate-14.90" onclick="selectRate(14.90, 'priyo')">
+                                <div class="rate-amount">৳14.90</div>
+                                <div class="rate-label">Priyo Agent / ATM</div>
+                            </button>
+                            <button class="rate-btn" id="rate-18.50" onclick="selectRate(18.50, 'regular')">
+                                <div class="rate-amount">৳18.50</div>
+                                <div class="rate-label">Regular Agent</div>
+                            </button>
+                        </div>
+                        
+                        <div class="custom-rate-toggle" id="custom-toggle" onclick="toggleCustomRate()">
+                            <span>⚙️</span>
+                            <span>Use Custom Rate</span>
+                        </div>
+                        
+                        <div class="custom-rate-input" id="custom-rate-container">
+                            <div class="custom-input-wrapper">
+                                <span style="font-size: 18px; font-weight: 700; color: var(--primary);">৳</span>
+                                <input 
+                                    type="number" 
+                                    class="custom-input" 
+                                    id="custom-rate" 
+                                    placeholder="Enter custom rate"
+                                    step="0.01"
+                                    oninput="handleCustomRateInput(this.value)"
+                                >
+                                <span style="font-size: 14px; color: var(--text-secondary); font-weight: 600;">/1000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="rate-buttons">
-      <button id="r1" class="rate-btn" onclick="selectRate(14.90, 'Preset 14.90')">14.90</button>
-      <button id="r2" class="rate-btn" onclick="selectRate(18.50, 'Preset 18.50')">18.50</button>
+                <button class="calculate-btn" onclick="calculate()">
+                    <span>🧮</span>
+                    <span>Calculate Cash Out</span>
+                </button>
+            </div>
+
+            <!-- Result Card -->
+            <div class="result-card" id="result">
+                <div class="result-header">
+                    <div class="result-title">You Can Cash Out</div>
+                    <div class="result-amount" id="result-amount">৳0.00</div>
+                    <div style="margin-top: 8px;">
+                        <span class="rate-badge" id="rate-badge">৳14.90 rate</span>
+                    </div>
+                </div>
+                
+                <div class="breakdown">
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">
+                            <span>💵</span> Your Balance
+                        </span>
+                        <span class="breakdown-value" id="breakdown-balance">৳0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">
+                            <span>📊</span> Charge Rate
+                        </span>
+                        <span class="breakdown-value" id="breakdown-rate">৳14.90 per 1000</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">
+                            <span>💸</span> Charge Amount
+                        </span>
+                        <span class="breakdown-value highlight" id="breakdown-charge">৳0</span>
+                    </div>
+                    <div class="breakdown-row" style="border-top: 2px solid var(--border); margin-top: 8px; padding-top: 16px;">
+                        <span class="breakdown-label">
+                            <span>✅</span> Net Cash Out
+                        </span>
+                        <span class="breakdown-value highlight" id="breakdown-net">৳0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">🏧</div>
+                    <div class="info-title">ATM Cash Out</div>
+                    <div class="info-value">৳14.90/1000</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🏪</div>
+                    <div class="info-title">Priyo Agent</div>
+                    <div class="info-value">৳14.90/1000</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="developer">Made with ❤️ by Shishir</div>
+            <a href="https://www.facebook.com/imshishr" target="_blank" class="facebook-link" onclick="handleFacebookClick(event)">
+                <svg class="facebook-icon" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+            </a>
+        </footer>
+
+        <!-- Toast -->
+        <div class="toast" id="toast">Copied to clipboard!</div>
     </div>
 
-    <input type="number" id="manualRate" placeholder="Custom Rate (per 1000)" oninput="manualSelect()">
+    <script>
+        // State
+        let selectedRate = null;
+        let isCustomRate = false;
+        let currentTheme = localStorage.getItem('theme') || 'light';
 
-    <button class="calculate" onclick="calculate()">Calculate</button>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon();
+            
+            // Check for saved rate preference
+            const savedRate = localStorage.getItem('preferredRate');
+            if (savedRate) {
+                const rate = parseFloat(savedRate);
+                if (rate === 14.90) selectRate(14.90, 'priyo');
+                else if (rate === 18.50) selectRate(18.50, 'regular');
+                else {
+                    toggleCustomRate();
+                    document.getElementById('custom-rate').value = rate;
+                    handleCustomRateInput(rate);
+                }
+            } else {
+                selectRate(14.90, 'priyo'); // Default
+            }
+        });
 
-    <div class="result" id="result">৳ 0.00</div>
-    <div class="small" id="rateInfo">No rate selected</div>
-  </div>
+        // Theme Toggle
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
+            updateThemeIcon();
+        }
 
-  <div class="mode-toggle" onclick="toggleMode()">🌙 Toggle Day/Night</div>
+        function updateThemeIcon() {
+            document.getElementById('theme-icon').textContent = currentTheme === 'light' ? '🌙' : '☀️';
+        }
 
-  <div class="footer">
-    Made by Shishir <br>
-    <a href="https://www.facebook.com/imshishr" target="_blank">Facebook</a>
-  </div>
-</div>
+        // Rate Selection
+        function selectRate(rate, type) {
+            selectedRate = rate;
+            isCustomRate = false;
+            
+            // Update UI
+            document.querySelectorAll('.rate-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`rate-${rate}`).classList.add('active');
+            document.getElementById('custom-toggle').classList.remove('active');
+            document.getElementById('custom-rate-container').classList.remove('show');
+            
+            // Save preference
+            localStorage.setItem('preferredRate', rate);
+            
+            // Clear custom input
+            document.getElementById('custom-rate').value = '';
+        }
 
-<script>
-let selectedRate = null;
-let rateLabel = "";
+        function toggleCustomRate() {
+            isCustomRate = !isCustomRate;
+            const container = document.getElementById('custom-rate-container');
+            const toggle = document.getElementById('custom-toggle');
+            
+            if (isCustomRate) {
+                container.classList.add('show');
+                toggle.classList.add('active');
+                document.querySelectorAll('.rate-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById('custom-rate').focus();
+                selectedRate = parseFloat(document.getElementById('custom-rate').value) || null;
+            } else {
+                container.classList.remove('show');
+                toggle.classList.remove('active');
+                // Revert to default if no rate selected
+                if (!selectedRate) selectRate(14.90, 'priyo');
+            }
+        }
 
-// Highlight selection
-function clearActive() {
-  document.getElementById("r1").classList.remove("active");
-  document.getElementById("r2").classList.remove("active");
-}
+        function handleCustomRateInput(value) {
+            const rate = parseFloat(value);
+            if (rate && rate > 0) {
+                selectedRate = rate;
+                localStorage.setItem('preferredRate', rate);
+            }
+        }
 
-// Preset rate select
-function selectRate(rate, label) {
-  selectedRate = rate;
-  rateLabel = label;
+        // Calculation Logic
+        function calculate() {
+            const balanceInput = document.getElementById('balance');
+            const balance = parseFloat(balanceInput.value);
+            
+            if (!balance || balance <= 0) {
+                showToast('Please enter a valid balance amount');
+                balanceInput.focus();
+                return;
+            }
+            
+            if (!selectedRate || selectedRate <= 0) {
+                showToast('Please select a charge rate');
+                return;
+            }
+            
+            // Calculate: If balance = cashOut + charge, and charge = (cashOut/1000)*rate
+            // Then: balance = cashOut + (cashOut*rate/1000)
+            // balance = cashOut * (1 + rate/1000)
+            // cashOut = balance / (1 + rate/1000)
+            
+            const divisor = 1 + (selectedRate / 1000);
+            const cashOutAmount = balance / divisor;
+            const chargeAmount = balance - cashOutAmount;
+            
+            // Display Results
+            displayResults(balance, cashOutAmount, chargeAmount, selectedRate);
+        }
 
-  clearActive();
+        function displayResults(balance, cashOut, charge, rate) {
+            const resultCard = document.getElementById('result');
+            
+            // Format numbers
+            const formatCurrency = (num) => '৳' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            
+            // Update values
+            document.getElementById('result-amount').textContent = formatCurrency(cashOut);
+            document.getElementById('breakdown-balance').textContent = formatCurrency(balance);
+            document.getElementById('breakdown-rate').textContent = '৳' + rate.toFixed(2) + ' per 1000';
+            document.getElementById('breakdown-charge').textContent = formatCurrency(charge);
+            document.getElementById('breakdown-net').textContent = formatCurrency(cashOut);
+            
+            // Update badge
+            const badge = document.getElementById('rate-badge');
+            if (isCustomRate || (rate !== 14.90 && rate !== 18.50)) {
+                badge.textContent = '৳' + rate.toFixed(2) + ' (Custom)';
+                badge.classList.add('custom');
+            } else if (rate === 14.90) {
+                badge.textContent = '৳14.90 (Priyo/ATM)';
+                badge.classList.remove('custom');
+            } else {
+                badge.textContent = '৳18.50 (Regular)';
+                badge.classList.remove('custom');
+            }
+            
+            // Show result
+            resultCard.classList.add('show');
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Add pulse animation briefly
+            resultCard.classList.add('pulse');
+            setTimeout(() => resultCard.classList.remove('pulse'), 2000);
+            
+            // Copy to clipboard automatically
+            copyToClipboard(cashOut.toFixed(2));
+        }
 
-  if (rate === 14.90) document.getElementById("r1").classList.add("active");
-  if (rate === 18.50) document.getElementById("r2").classList.add("active");
+        // Utility Functions
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Amount copied: ৳' + text);
+                });
+            }
+        }
 
-  document.getElementById("manualRate").value = "";
-  updateRateInfo();
-}
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
 
-// Manual rate
-function manualSelect() {
-  let val = parseFloat(document.getElementById("manualRate").value);
+        function handleFacebookClick(e) {
+            // Ensure link opens in new tab properly
+            window.open('https://www.facebook.com/imshishr', '_blank', 'noopener,noreferrer');
+            e.preventDefault();
+        }
 
-  if (val > 0) {
-    selectedRate = val;
-    rateLabel = "Custom Rate: " + val;
+        // Enter key support
+        document.getElementById('balance').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') calculate();
+        });
+        
+        document.getElementById('custom-rate').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const balanceInput = document.getElementById('balance');
+                if (!balanceInput.value) {
+                    balanceInput.focus();
+                } else {
+                    calculate();
+                }
+            }
+        });
 
-    clearActive();
-    updateRateInfo();
-  }
-}
+        // Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                self.addEventListener('install', e => self.skipWaiting());
+                self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+                self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
+            `)).catch(() => console.log('SW registration skipped'));
+        }
 
-// Update label
-function updateRateInfo() {
-  document.getElementById("rateInfo").innerText = "Using: " + rateLabel;
-}
-
-// Calculate
-function calculate() {
-  let balance = parseFloat(document.getElementById("balance").value);
-
-  if (!balance || balance <= 0 || !selectedRate) {
-    alert("Enter balance & select rate");
-    return;
-  }
-
-  let cashout = balance / (1 + selectedRate / 1000);
-
-  document.getElementById("result").innerText =
-    "৳ " + cashout.toFixed(2);
-}
-
-// Dark mode
-function toggleMode() {
-  document.body.classList.toggle("dark");
-}
-
-// PWA service worker
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-</script>
-
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
 </body>
 </html>
